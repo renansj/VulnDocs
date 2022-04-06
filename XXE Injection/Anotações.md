@@ -1,4 +1,4 @@
-#XML
+# XML
 
 XML (Extensible Markup Language) é uma linguagem de marcação normalmente utilizada para desenvolvimento web, é utilizanda no armazenamento e transporte de dados.
 É uma linguagem auto descritiva, não existem tags predefinidas como `<p>`, `<img>` ou etc...
