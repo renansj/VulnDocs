@@ -19,7 +19,7 @@ Todas as tags são definidas pelo usuário dependendo do dado que isso represent
 
 **standalone**: Informa ao parser se o documento tem link a uma fonte de dados externa ou tem alguma referencia a algum documento externo, o valor default é "no", os valores disponívels são "yes" e "no".
 
-#Entidades
+# Entidades
 
 Em linguagens de programação nós temos variáveis e constantes, em XML nós temos Entity, são a maneira de representar dados presentes dentro do documento XML, existem várias entidades pré-existentes no XML, como:
 
@@ -38,7 +38,7 @@ A declaração de uma Entity externa usa a keyword SYSTEM e precisa declarar uma
 
 Nessa sintaxe `externalEntity` é o nome da entidade, `SYSTEM` é a keyword utilizada e `URL` é de onde iremos carregar nossa entidade externa.
 
-#DTD (Document Type Definition)
+# DTD (Document Type Definition)
 
 É utilizado para declarar a estrutura do documento XML, tipos de dados, valores que eles podem conter e etc, DTD pode estar presente no arquivo XML ou declarado separadamente, é normalmente declarado no início do arquivo utilizando `<DOCTYPE>`
 Existem vários tipos de DTD's, aqui estamos interessados nos DTD's externos.
@@ -49,7 +49,7 @@ Existem vários tipos de DTD's, aqui estamos interessados nos DTD's externos.
 
 Da mesma maneira da Entity externa, a keyword `SYSTEM` será utilizada para especificar de onde o DTD será carregado no DTD `externalDTD`
 
-#Ataque XXE
+# Ataque XXE
 
 Esse ataque é efetuado contra uma aplicação no momento da análise do input de XML, se o parser tiver uma configuração vulnerável e processar algo indevido, poderemos injetar códigos da mesma maneira que uma falha XSS para obter informações privilegiadas.
 
