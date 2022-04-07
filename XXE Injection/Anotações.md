@@ -350,7 +350,7 @@ Entrando na página de detalhes de qualquer produto, podemos ver que existe um b
 </stockCheck>
 ```
 
-Até então tudo bem, poré o retorno é apenas o número `764` que é a quantidade unidades do produto que pedimos para verificar no estoque.
+Até então tudo bem, porém o retorno é apenas o número `764` que é a quantidade unidades do produto que pedimos para verificar no estoque.
 
 Sendo assim, vamos utilizar o Burp Collaborator do BurpSuite para nos ajudar, vamos abrí-lo e copiar o subdomain que estará o nosso payload:
 
