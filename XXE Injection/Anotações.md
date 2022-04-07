@@ -154,7 +154,7 @@ Como podemos ver através do resultado, utilizando XXE conseguimos explorar um S
 
 ### Como funciona?
 
-Quando injetamos o payload, ele é passado para o servidor que não possui filtros para mitigar XXE, sendo assim o servidor utiliza um parser e envia o output do XML parseado, que no nosso caso será o arquivo `bugs.txt` que será exposta ao atacante devido a query XML.
+Quando injetamos o payload, ele é passado para o servidor que não possui filtros para mitigar XXE, sendo assim o servidor utiliza um parser e envia o output do XML parseado, que no nosso caso será o arquivo `bugs.txt` que será exposto ao atacante devido a query XML.
 
 ### Arquivo remoto
 
