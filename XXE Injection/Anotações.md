@@ -86,7 +86,7 @@ Vamos utilizar [bWAPP](http://www.itsecgames.com/) da OWASP para efetuar os ataq
 
 No bWAPP no desafio de XXE precisamos interceptar com o BurpSuite quando botão `Any bugs?` for pressionado.
 
-Irá gerar uma requisição post parao endpoint `xxe-2.php` com o seguinte payload:
+Irá gerar uma requisição post para o endpoint `xxe-2.php` com o seguinte payload:
 
 ```xml
 <reset>
@@ -220,7 +220,7 @@ Como já colocamos a sintaxe básica de uma imagem SVG dentro do payload, só pr
 
 `mv payload.xml payload.svg`
 
-Quando upload for efetuado, vamos que que nosso avatar irá aparecer bem pequeno nos comentários, podemos clicar com o botão direito nele e ir em abrir imagem. 
+Quando upload for efetuado, vamos que nosso avatar irá aparecer bem pequeno nos comentários, podemos clicar com o botão direito nele e ir em abrir imagem. 
 Na imagem SVG estará o hostname do servidor qual teve o XML parseado com o comando `file:///etc/hostname`.
 
 ### XXE para execução remota de código
