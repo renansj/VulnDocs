@@ -302,7 +302,7 @@ No caso de XSS poderemos utilizar [CDATA](https://en.wikipedia.org/wiki/CDATA) d
 </root>
 ```
 
-Na maioria dos campos de input os caracteres `<` e `>` são bloqueados, então conseguimso bypassar colocando eles no CDATA, devido a eles não serem parseados, apenas apresentados no output.
+Na maioria dos campos de input os caracteres `<` e `>` são bloqueados, então conseguimos bypassar colocando eles no CDATA, devido a eles não serem parseados, apenas apresentados no output.
 
 Caso esteja utilizando burpsuite podemos utilizar o "Show response in browser" e verificar se existe um alerta com o número 1, se sim então podemos efetuar ataques XSS por XXE.
 
