@@ -334,7 +334,7 @@ Caso o retorno sejam as pastas do diretório / do servidor nós conseguimos modi
 
 ### Blind XXE
 
-Nos ataques anteriores nós conseguimos definir qual campo estava vulnerável, mas qual existe um retorno diferente do nosso input? Podemos utilizar Blind XXE, vamos utilizar outro lab do PortSwigger para exemplificar esse caso, o lab é o [Blind XXE with out-of-band interaction via XML parameter Entities](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-out-of-band-interaction-using-parameter-entities).
+Nos ataques anteriores nós conseguimos definir qual campo estava vulnerável, mas e quando existe um retorno diferente do nosso input? Podemos utilizar Blind XXE, vamos utilizar outro lab do PortSwigger para exemplificar esse caso, o lab é o [Blind XXE with out-of-band interaction via XML parameter Entities](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-out-of-band-interaction-using-parameter-entities).
 
 Entrando na página de detalhes de qualquer produto, podemos ver que existe um botão `check stock`, vamos interceptá-lo e ver o payload.
 
