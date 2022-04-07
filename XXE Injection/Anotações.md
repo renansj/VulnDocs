@@ -63,7 +63,7 @@ Que nos permite especificar a localização do arquivo externo que contém a dec
 
 #### Impactos
 
-XXE pode fornecer uma ameaça para a company, XXE sempre esteve na lista das vulnerabilidades mais comuns da OWASP e é comum que muitos sites utilizem XML nas strings e transporte de dados, se os devidos cuidados não forem tomados algumas informações poderão ser comprometidas.
+XXE pode fornecer uma ameaça para a empresa, XXE sempre esteve na lista das vulnerabilidades mais comuns da OWASP e é comum que muitos sites utilizem XML nas strings e transporte de dados, se os devidos cuidados não forem tomados algumas informações poderão ser comprometidas.
 Uma lista de ataques possíveis são:
 
 - Server-Side Request Forgery
