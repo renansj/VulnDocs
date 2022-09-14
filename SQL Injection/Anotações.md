@@ -257,6 +257,90 @@ Para saber como funciona a concatenação em cada banco podemos consultar a docu
 
 ### Vulnerabilidades Blind SQLI
 
+##### O que é Blind SQLI?
 
+Blind SQLI é quando a aplicação é vulnerável a SQLI, porém as respostas HTTP não contém nenhum resultado relevante da Query ou erros do banco.
+
+Com BlindSQLI muitas técnicas como UNION attacks não são efetivas, porque eles são baseadas em respostas das queries injetadas e na resposta da aplicação.
+Ainda é possível explorar SQLI para obter dados, mas diferentes técnicas precisam ser utilizadas.
+
+Levando em consideração o banco envolvido  e a vulnerabilidade, podem ser utilizados para explorar Blind SQLI as seguintes formas:
+
+* Mudar a lógica da query para detectar diferenças na resposta da aplicação dependendo da condição ser verdadeira ou não. Isso pode envolver injetar alguma lógica booleana ou gerar um erro de divisão por zero.
+* Você pode condicionalmente gerar um delay para processar a query, permitindo saber se é vulnerável ou não de baseado no tempo que a aplicação demora pra responder.
+* Você pode gerar uma interação de rede out-of-band, pode utilizar técnicas [OAST](https://portswigger.net/burp/application-security-testing/oast). É uma técnica bem eficaz e pode funcionar onde outras técnicas falharão. Normalmente você poderá filtrar os dados através do canal out-of-band, um exemplo seria colocar os dados de uma busca em um DNS que você controla.
+
+#### Explorando SQLI com respostas condicionais
+
+Considere uma aplicação que utiliza tracking cookies para analisar sobre o uso do mesmo, no caso os requests da aplicação contém um header de Cookie similar a esse:
+
+`Cookie: TrackingId=u5YD3PapBcR4lN3e7Tj4`
+
+Quando o request é processado o TrackingId é enviado para aplicação para determinar se é um usuário conhecido, a query ficaria assim:
+
+```sql
+SELECT TrackingId From TrackedUsers WHERE TrackingID = 'u5YD3PapBcR4lN3e7Tj4'
+```
+
+Essa query é vulnerável a SQLI, mas os resultados não são retornados ao usuário, mas a aplicação se comporta de forma diferente dependente do retorno da query.
+Caso retorne algo (devido ao TrackingId já existir), então uma mensagem: "Welcome back" é mostrada para o usuário.
+
+Esse comportamento é suficiente para podermos explorar o blind SQLI e buscar informações. Pra ver o funcionamento, vamos supor que dois requests foram enviados com o seguinte TrackingId:
+
+```sql
+...xyz' AND '1'='1
+...xyz' AND '1'='2
+```
+
+O primeiro irá retornar resultado, porque o `AND '1'='1` é verdadeiro caso exista o TrackingId na base, e então a mensagem `Welcome Back`é mostrada na página. Porém o segundo valor nunca será verdadeiro, então a mensagem nunca será mostrada, o que nos permite definir a resposta pra cada condição injetada e extrair os dados de forma parcial.
+
+Voltando ao exemplo da tabela `Users` com as colunas `username` e `password` e o usuário chamado `Administrator`. Podemos descobrir a senha desse usuário mandando uma série de inputs para testar cada letra da senha por vez.
+
+Exemplo: 
+
+```sql
+xyz' AND SUBSTRING((SELECT Password FROM Users WHERE Username = 'Administrator'), 1, 1) > 'm
+```
+
+Se retornar a mensagem "Welcome back", quer dizer que o código injetado é verdadeiro, ou seja, a primeira letra da senha é "maior" que `m`.
+
+
+Então mandamos a seguinte query:
+
+```sql
+xyz' AND SUBSTRING((SELECT Password FROM Users WHERE Username = 'Administrator'), 1, 1) > 't
+```
+
+E essa query não retorna a mensagem de `Welcome Back`, indicando que a condição injetada é falsa, então vimos que a primeira letra do password não é maior que t.
+
+Tentando entre esses dois chegaremos a primeira letra, o que retornará a mensagem `Welcome Back` confirmado nossa query injetada.
+
+```sql
+xyz' AND SUBSTRING((SELECT Password FROM Users WHERE Username = 'Administrator'), 1, 1) = 's
+```
+
+#### Induzindo respostas condicionais através de erros SQL
+
+Supondo que que a aplicação anterior tenha a mesma query, mas não se comporte diferente independente da query retornar dados ou não, então o ataque não irá funcionar, porque injetar condições booleanas não fará diferença na resposta da aplicação.
+
+Nesse caso, geralmente ainda é possível efetuar erros baseados em queries condicionais, isso envolve modificar a query fazendo com que ela cause um erro se a condição for verdadeira, caso contrário continue normalmente. Na maioria das vezes erros não tratados e lançados pelo banco irão causar alguma diferença na resposta da aplicação, seja ela um campo diferente ou uma mensagem de erro, e isso nos permite saber o comportamento da condição injetada.
+
+Vamos supor que dois requests são enviados contendo o `TrackingId` da seguinte maneira:
+
+```sql
+xyz' AND (SELECT CASE WHEN (1=2) THEN 1/0 ELSE 'a' END)='a
+```
+
+```sql
+xyz' AND (SELECT CASE WHEN (1=1) THEN 1/0 ELSE 'a' END)='a
+```
+
+Esses `selects` utilizam `CASE` para efetuar a condicional e retornar expressões diferentes dependendo de qual delas é verdadeira. No primeiro input, o `CASE` resulta em `'a'`, que não causa erro algum. Já o segundo input resulta em 1/0, que causa um erro de divisão por zero. Levando em conta que o erro cause alguma diferença na resposta da aplicação, nos podemos utilizar a diferença para testar o resultado da nossa injeção.
+
+Vamos ver como ficaria uma query para testar a primeira letra do usuário `Administrator` dessa maneira:
+
+```sql
+xyz' AND (SELECT CASE WHEN (Username = 'ADMINISTRATOR AND SUBSTRING (Password, 1, 1) > 'm') THEN 1/0 ELSE 'a' END FROM Users)='a
+```
 
 `Ref: PortSwigger`
