@@ -343,4 +343,30 @@ Vamos ver como ficaria uma query para testar a primeira letra do usuário `Admin
 xyz' AND (SELECT CASE WHEN (Username = 'ADMINISTRATOR AND SUBSTRING (Password, 1, 1) > 'm') THEN 1/0 ELSE 'a' END FROM Users)='a
 ```
 
+#### Explorando Blind SQLI com time delays
+
+Vamos supor que no exemplo anterior a aplicação lide bem com erros, e gerar erros condicionais não irão funcionar, como proceder?
+
+Nessa situação ainda é possível explorar Blind SQLI gerando tempos de resposta condicionais de acordo com condições injetadas. As queries são geralmente processadas de forma síncrona pela aplicação, então gerar delay na query também irá gerar delay na resposta HTTP. O que nos permite saber o resultado da condição injetada através do tempo até a resposta HTTP retornar.
+
+Porém a técnica de gerar delays são especificas do banco que está sendo utilizado, vamos utilizar um exemplo de MSSQL, que irá gerar o delay dependendo da condição passada:
+
+```sql
+'; IF (1=2) WAITFOR DELAY '0:0:10'--
+```
+
+```sql
+'; IF (1=1) WAITFOR DELAY '0:0:10'--
+```
+
+O primeiro como vemos não vai gerar o delay, já o segundo vai porque a condição 1=1 é verdadeira.
+
+Utilizando essa técnica podemos trazer dados da maneira já descrita nas explorações anterior, só que ao invés de utilizar erros, iremos utilizar o tempo. :)
+
+```sql
+'; IF (SELECT COUNT(Username) FROM Users WHERE Username = 'Administrator' AND SUBSTRING(Password, 1, 1) > 'm') = 1 WAITFOR DELAY '0:0:10'--
+```
+
+Caso a primeira letra da senha do usuário `Administrator` seja "maior" que m no alfabeto, será gerado um delay de 10 segundos, e podemos efetuar esse mesmo ataque para as outras letras aumentando o substring.
+
 `Ref: PortSwigger`
